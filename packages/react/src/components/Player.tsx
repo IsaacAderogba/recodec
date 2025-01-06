@@ -1,22 +1,16 @@
+import { Composition } from "@recodec/core";
 import { ComponentType } from "react";
 import { CompositionProvider } from "../providers/CompositionProvider";
-import { CompositionMetadata, CompositionProps } from "../utilities/types";
 
-export interface PlayerProps<T extends CompositionProps> {
-  Component: ComponentType<T>;
-  composition: {
-    props: T;
-    metadata: CompositionMetadata;
-  };
+export interface PlayerProps {
+  Component: ComponentType;
+  composition: Composition;
 }
 
-export function Player<T extends CompositionProps>({
-  Component,
-  composition
-}: PlayerProps<T>) {
+export const Player: React.FC<PlayerProps> = ({ Component, composition }) => {
   return (
     <CompositionProvider>
       <Component {...composition.props} />
     </CompositionProvider>
   );
-}
+};

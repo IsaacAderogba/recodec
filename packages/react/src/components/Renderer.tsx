@@ -1,19 +1,17 @@
 import { ComponentType } from "react";
 import { CompositionProvider } from "../providers/CompositionProvider";
-import { CompositionProps } from "../utilities/types";
 
-export interface RendererProps<T extends CompositionProps> {
-  Component: ComponentType<T>;
-  // composition: {
-  //   props: T;
-  //   metadata: CompositionMetadata;
-  // };
+export interface RendererProps {
+  Component: ComponentType<any>;
 }
 
-export function Renderer<T extends CompositionProps>(props: RendererProps<T>) {
+export const Renderer: React.FC<RendererProps> = ({ Component }) => {
+  /**
+   * todo: retrieve composition from window and sync back up
+   */
   return (
     <CompositionProvider>
       {/* <Component {...composition.props} /> */}
     </CompositionProvider>
   );
-}
+};

@@ -10,7 +10,7 @@ export const chainBundleCommand = (program: Command) => {
     .command("bundle")
     .description("Bundle a recodec project to be rendered later")
     .argument("<string>", "entry file")
-    .option("--output-dir <string>", "output directory")
+    .option("--output-dir <string>")
     .action(async (entry: string, options: BundleCommandProps) => {
       await bundle({ entry, output: { dir: options.outputDir } });
     });

@@ -1,13 +1,14 @@
+import { Composition } from "@recodec/core";
 import path from "path";
 import puppeteer from "puppeteer";
 
 export const render = async (props: RenderProps) => {
-  const { input, composition } = props;
+  const { entry, composition } = props;
 
   const browser = await puppeteer.launch({});
   const page = await browser.newPage();
 
-  await page.goto(`file://${path.resolve(__dirname, input.path)}`);
+  await page.goto(`file://${path.resolve(__dirname, entry)}`);
   await page.evaluate(value => (window.composition = value), composition);
   await page.setViewport({
     width: composition.metadata.width,
@@ -27,47 +28,11 @@ export const render = async (props: RenderProps) => {
   await browser.close();
 };
 
-render({
-  input: { path: "../example-bundle/index.html" },
-  composition: {
-    codec: "h264",
-    props: { foo: "bar" },
-    metadata: { width: 1920, height: 1080, fps: 30, durationInFrames: 150 }
-  },
-  output: { path: "" }
-});
-
 export interface RenderProps {
-  input: { path: string };
+  entry: string;
   composition: Composition;
-  output: { path: string };
-}
-
-interface Composition {
-  codec: "h264" | "mp3";
-  props: Record<string, any>;
-  metadata: {
-    fps: number;
-    durationInFrames: number;
-    height: number;
-    width: number;
+  configuration: {
+    codec: "h264" | "mp3";
   };
-}
-
-interface CompositionState {
-  codec: "h264" | "mp3";
-  props: Record<string, any>;
-  metadata: {
-    fps: number;
-    durationInFrames: number;
-    height: number;
-    width: number;
-  };
-}
-
-declare global {
-  interface Window {
-    composition: Composition;
-    compositionState: CompositionState;
-  }
+  output: { file: string };
 }
