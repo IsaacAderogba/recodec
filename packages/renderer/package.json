@@ -12,5 +12,12 @@
   "author": "Isaac Aderogba",
   "license": "ISC",
   "description": "",
-  "dependencies": {}
+  "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.3",
+    "@types/react-dom": "^19.0.2"
+  }
 }

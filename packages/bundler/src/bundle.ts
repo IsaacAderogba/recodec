@@ -1,5 +1,5 @@
-import { build } from "esbuild";
-import path from "path";
+import { build, defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export interface BundleProps {
   entry: string;
@@ -11,9 +11,18 @@ export interface BundleProps {
 export const bundle = async (props: BundleProps) => {
   const { entry, output } = props;
 
-  await build({
-    entryPoints: [entry],
-    bundle: true,
-    outfile: path.join(output.dir, "renderer.js")
-  });
+  await build(
+    defineConfig({
+      plugins: [react()],
+      build: {
+        copyPublicDir: false,
+        lib: {
+          entry,
+          formats: ["es"],
+          fileName: "bundle"
+        },
+        outDir: output.dir
+      }
+    })
+  );
 };
