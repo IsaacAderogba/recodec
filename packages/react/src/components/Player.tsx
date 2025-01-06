@@ -3,18 +3,20 @@ import { CompositionProvider } from "../providers/CompositionProvider";
 import { CompositionMetadata, CompositionProps } from "../utilities/types";
 
 export interface PlayerProps<T extends CompositionProps> {
-  metadata: CompositionMetadata;
-  compositionProps: T;
-  Composition: ComponentType<T>;
+  Component: ComponentType<T>;
+  composition: {
+    props: T;
+    metadata: CompositionMetadata;
+  };
 }
 
 export function Player<T extends CompositionProps>({
-  Composition,
-  compositionProps
+  Component,
+  composition
 }: PlayerProps<T>) {
   return (
     <CompositionProvider>
-      <Composition {...compositionProps} />
+      <Component {...composition.props} />
     </CompositionProvider>
   );
 }

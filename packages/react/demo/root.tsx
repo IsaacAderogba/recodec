@@ -1,27 +1,14 @@
-import { useEffect } from "react";
 import { Renderer } from "../src";
 
-interface Props {
+function Root() {
+  return <Renderer Component={Composition} />;
+}
+
+interface CompositionProps {
   foo: string;
 }
 
-const Root: React.FC<Props> = props => {
-  console.log("renderer props", props);
-
-  useEffect(() => {
-    console.log("use effect works");
-  }, []);
-
-  return (
-    <Renderer
-      Composition={Composition}
-      compositionProps={props}
-      metadata={{ width: 1920, height: 1080, fps: 30, durationInFrames: 150 }}
-    />
-  );
-};
-
-const Composition: React.FC<Props> = () => {
+const Composition: React.FC<CompositionProps> = () => {
   return null;
 };
 

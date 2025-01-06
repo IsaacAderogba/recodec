@@ -1,46 +1,73 @@
-import { JSDOM } from "jsdom";
 import path from "path";
-import { render as renderDOM } from "@testing-library/react";
-
-export interface RenderProps {
-  input: {
-    file: string;
-  };
-  composition: {
-    codec: "h264" | "mp3";
-    props: Record<string, any>;
-  };
-  output: {
-    file: string;
-  };
-}
-
-const importComponent =
-  (path: string) =>
-  (...args: any[]) => {
-    return import(path).then(({ default: component }) => component(...args));
-  };
+import puppeteer from "puppeteer";
 
 export const render = async (props: RenderProps) => {
-  const { input, composition, output } = props;
+  const { input, composition } = props;
 
-  const component = importComponent(path.resolve(__dirname, input.file));
-  const dom = new JSDOM("");
+  const browser = await puppeteer.launch({});
+  const page = await browser.newPage();
 
-  const previousWindow = global.window;
-  const previousDocument = global.document;
+  await page.goto(`file://${path.resolve(__dirname, input.path)}`);
+  await page.evaluate(value => (window.composition = value), composition);
+  await page.setViewport({
+    width: composition.metadata.width,
+    height: composition.metadata.height
+  });
 
-  global.window = dom.window as any;
-  global.document = dom.window.document;
+  await new Promise(resolve =>
+    setTimeout(() => {
+      resolve(true);
+    }, 2000)
+  );
+  console.log(
+    "composition state",
+    await page.evaluate(() => window.compositionState)
+  );
 
-  renderDOM(await component(composition.props), {});
-
-  global.window = previousWindow;
-  global.document = previousDocument;
+  await browser.close();
 };
 
 render({
-  input: { file: "../example-bundle/bundle.js" },
-  composition: { codec: "h264", props: { foo: "bar" } },
-  output: { file: "" }
+  input: { path: "../example-bundle/index.html" },
+  composition: {
+    codec: "h264",
+    props: { foo: "bar" },
+    metadata: { width: 1920, height: 1080, fps: 30, durationInFrames: 150 }
+  },
+  output: { path: "" }
 });
+
+export interface RenderProps {
+  input: { path: string };
+  composition: Composition;
+  output: { path: string };
+}
+
+interface Composition {
+  codec: "h264" | "mp3";
+  props: Record<string, any>;
+  metadata: {
+    fps: number;
+    durationInFrames: number;
+    height: number;
+    width: number;
+  };
+}
+
+interface CompositionState {
+  codec: "h264" | "mp3";
+  props: Record<string, any>;
+  metadata: {
+    fps: number;
+    durationInFrames: number;
+    height: number;
+    width: number;
+  };
+}
+
+declare global {
+  interface Window {
+    composition: Composition;
+    compositionState: CompositionState;
+  }
+}
