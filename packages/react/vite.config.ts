@@ -4,12 +4,17 @@ import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 
 export default defineConfig({
-  plugins: [react(), dts({ include: ["src"] })],
+  plugins: [
+    react(),
+    dts({ tsconfigPath: "./tsconfig.app.json", include: ["src"] })
+  ],
   build: {
     copyPublicDir: false,
     lib: {
+      name: "Recodec",
       entry: resolve(__dirname, "src", "index.tsx"),
-      formats: ["es"]
+      formats: ["es"],
+      fileName: "index"
     }
   }
 });
