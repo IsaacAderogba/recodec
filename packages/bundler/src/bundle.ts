@@ -1,5 +1,6 @@
-import { build, defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
+import { build, defineConfig } from "vite";
 
 export interface BundleProps {
   entry: string;
@@ -18,7 +19,7 @@ export const bundle = async (props: BundleProps) => {
         copyPublicDir: false,
         lib: {
           entry,
-          formats: ["es"],
+          formats: ["cjs"],
           fileName: "bundle"
         },
         outDir: output.dir

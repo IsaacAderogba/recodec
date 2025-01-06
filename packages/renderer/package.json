@@ -14,9 +14,11 @@
   "description": "",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
-    "@testing-library/react": "^16.1.0"
+    "@testing-library/react": "^16.1.0",
+    "jsdom": "^25.0.1"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/react": "^19.0.3",
     "@types/react-dom": "^19.0.2"
   }

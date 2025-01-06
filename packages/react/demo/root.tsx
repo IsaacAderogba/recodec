@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Renderer } from "../src";
 
 interface Props {
@@ -6,6 +7,10 @@ interface Props {
 
 const Root: React.FC<Props> = props => {
   console.log("renderer props", props);
+
+  useEffect(() => {
+    console.log("use effect works");
+  }, []);
 
   return (
     <Renderer
