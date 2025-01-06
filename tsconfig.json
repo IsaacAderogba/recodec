@@ -1,4 +1,9 @@
 {
   "files": [],
-  "references": [{ "path": "packages/bundler" }]
+  "references": [
+    { "path": "packages/cli" },
+    { "path": "packages/renderer" },
+    { "path": "packages/bundler" },
+    { "path": "packages/react" }
+  ]
 }

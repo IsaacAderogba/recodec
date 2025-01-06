@@ -1,5 +1,5 @@
 {
-  "name": "@recodec/bundler",
+  "name": "@recodec/renderer",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {

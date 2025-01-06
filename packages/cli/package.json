@@ -1,5 +1,5 @@
 {
-  "name": "@recodec/bundler",
+  "name": "@recodec/cli",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
@@ -12,5 +12,7 @@
   "author": "Isaac Aderogba",
   "license": "ISC",
   "description": "",
-  "dependencies": {}
+  "dependencies": {
+    "commander": "^13.0.0"
+  }
 }
