@@ -12,5 +12,7 @@
   "author": "Isaac Aderogba",
   "license": "ISC",
   "description": "",
-  "dependencies": {}
+  "dependencies": {
+    "esbuild": "^0.24.2"
+  }
 }
