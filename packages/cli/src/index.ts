@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 import { program } from "commander";
+import { chainBundleCommand } from "./commands/bundle";
+import { chainRenderCommand } from "./commands/render";
 
 program
-  .version("1.0.0")
-  .description("Recoder Bundler")
-  .option("-n, --name <type>", "Add your name")
-  .action(options => {
-    console.log(`Hey, ${options.name}!`, options);
-  });
+  .name("@recodec/cli")
+  .description("CLI to recodec server utilities")
+  .version("1.0.0");
+
+chainBundleCommand(program);
+chainRenderCommand(program);
 
 program.parse(process.argv);

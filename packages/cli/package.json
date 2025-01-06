@@ -13,6 +13,8 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@recodec/bundler": "^1.0.0",
+    "@recodec/renderer": "^1.0.0",
     "commander": "^13.0.0"
   }
 }
