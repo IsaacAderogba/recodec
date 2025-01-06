@@ -7,8 +7,8 @@ export type { AudioSequenceProps } from "./components/AudioSequence";
 export { VideoSequence } from "./components/VideoSequence";
 export type { VideoSequenceProps } from "./components/VideoSequence";
 
-export { CompositionPlayer } from "./components/CompositionPlayer";
-export type { CompositionPlayerProps } from "./components/CompositionPlayer";
+export { Player } from "./components/Player";
+export type { PlayerProps } from "./components/Player";
 
-export { CompositionRenderer } from "./components/CompositionRenderer";
-export type { CompositionRendererProps } from "./components/CompositionRenderer";
+export { Renderer } from "./components/Renderer";
+export type { RendererProps } from "./components/Renderer";
