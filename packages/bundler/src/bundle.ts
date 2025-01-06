@@ -1,4 +1,5 @@
 import { build } from "esbuild";
+import path from "path";
 
 export interface BundleProps {
   entry: string;
@@ -13,7 +14,6 @@ export const bundle = async (props: BundleProps) => {
   await build({
     entryPoints: [entry],
     bundle: true,
-    outdir: output.dir,
-    outfile: "recodec.js"
+    outfile: path.join(output.dir, "renderer.js")
   });
 };

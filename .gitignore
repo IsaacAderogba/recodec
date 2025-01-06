@@ -132,3 +132,5 @@ dist
 test-results
 database.db3
 release
+
+example-bundle
