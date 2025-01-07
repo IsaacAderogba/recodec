@@ -7,6 +7,7 @@ export type CompositionMetadata = {
 export type CompositionProps = Record<string, any>;
 
 export type CompositionState = {
+  durationInFrames: number;
   items: Record<string, CompositionItem>;
 };
 
@@ -35,7 +36,6 @@ export interface BaseCompositionItem {
   type: CompositionType;
   from: number;
   duration: number;
-  playbackRate: number;
   createdAt: string;
   updatedAt: string;
 }

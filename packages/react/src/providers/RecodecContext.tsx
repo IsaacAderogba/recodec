@@ -1,5 +1,9 @@
-import { CompositionMetadata, CompositionState } from "@recodec/core";
-import { createContext, Dispatch, SetStateAction } from "react";
+import {
+  CompositionItem,
+  CompositionMetadata,
+  CompositionState
+} from "@recodec/core";
+import { createContext, useContext } from "react";
 
 export interface RecodecState {
   composition: CompositionState;
@@ -8,9 +12,19 @@ export interface RecodecState {
 
 export interface RecodecStore {
   state: RecodecState;
-  setState: Dispatch<SetStateAction<RecodecState>>;
+  setItem: (item: CompositionItem) => void;
+  removeItem: (id: string) => void;
 }
 
 export const RecodecContext = createContext<RecodecStore | undefined>(
   undefined
 );
+
+export const useRecodecState = () => {
+  const store = useContext(RecodecContext);
+  if (!store) {
+    throw new Error("recodec hooks must be used within a RecodecProvider");
+  }
+
+  return store;
+};
