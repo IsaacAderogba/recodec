@@ -1,4 +1,4 @@
-import { Composition } from "@recodec/core";
+import { CompositionMetadata, CompositionProps } from "@recodec/core";
 import path from "path";
 import puppeteer from "puppeteer";
 
@@ -9,7 +9,7 @@ export const render = async (props: RenderProps) => {
   const page = await browser.newPage();
 
   await page.goto(`file://${path.resolve(__dirname, entry)}`);
-  await page.evaluate(value => (window.composition = value), composition);
+  await page.evaluate(value => (window.compositionProps = value), composition);
   await page.setViewport({
     width: composition.metadata.width,
     height: composition.metadata.height
@@ -20,17 +20,17 @@ export const render = async (props: RenderProps) => {
       resolve(true);
     }, 2000)
   );
-  console.log(
-    "composition state",
-    await page.evaluate(() => window.compositionState)
-  );
+
+  const state = await page.evaluate(() => window.compositionState);
+  // todo: use state to render video via ffmpeg
 
   await browser.close();
 };
 
 export interface RenderProps {
   entry: string;
-  composition: Composition;
+  composition: CompositionProps;
+  metadata: CompositionMetadata;
   configuration: {
     codec: "h264" | "mp3";
   };

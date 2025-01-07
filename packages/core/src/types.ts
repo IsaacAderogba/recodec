@@ -1,26 +1,52 @@
 export type CompositionMetadata = {
   fps: number;
-  durationInFrames: number;
   height: number;
   width: number;
 };
 
 export type CompositionProps = Record<string, any>;
 
-export interface Composition<
-  Props extends CompositionProps = CompositionProps
-> {
-  props: Props;
-  metadata: CompositionMetadata;
+export type CompositionState = {
+  items: Record<string, CompositionItem>;
+};
+
+export type CompositionItem = VideoCompositionItem | AudioCompositionItem;
+
+export interface VideoCompositionItem extends BaseCompositionItem {
+  type: "video";
+  data: VideoSequenceData;
 }
 
-export type CompositionState = {
-  foo: "bar";
-};
+export interface VideoSequenceData extends BaseSequenceData {
+  src: string;
+}
+
+export interface AudioCompositionItem extends BaseCompositionItem {
+  type: "audio";
+  data: AudioSequenceData;
+}
+
+export interface AudioSequenceData extends BaseSequenceData {
+  src: string;
+}
+
+export interface BaseCompositionItem {
+  id: string;
+  type: CompositionType;
+  from: number;
+  duration: number;
+  playbackRate: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BaseSequenceData {}
+
+export type CompositionType = "video" | "audio";
 
 declare global {
   interface Window {
-    composition: Composition;
+    compositionProps: CompositionProps;
     compositionState: CompositionState;
   }
 }

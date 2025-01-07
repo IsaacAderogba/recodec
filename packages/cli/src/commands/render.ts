@@ -5,7 +5,6 @@ interface RenderCommandProps {
   width: RenderProps["composition"]["metadata"]["width"];
   height: RenderProps["composition"]["metadata"]["height"];
   fps: RenderProps["composition"]["metadata"]["fps"];
-  durationInFrames: RenderProps["composition"]["metadata"]["durationInFrames"];
   props: string;
 
   codec: RenderProps["configuration"]["codec"];
@@ -20,7 +19,6 @@ export const chainRenderCommand = (program: Command) => {
     .option("--width <number>")
     .option("--height <number>")
     .option("--fps <number>")
-    .option("--duration-in-frames <number>")
     .option("--props <string>")
     .option("--codec <string>")
     .option("--output-file <string>")
@@ -28,14 +26,11 @@ export const chainRenderCommand = (program: Command) => {
       await render({
         entry,
         output: { file: options.outputFile },
-        composition: {
-          props: JSON.parse(options.props),
-          metadata: {
-            durationInFrames: options.durationInFrames,
-            fps: options.fps,
-            height: options.height,
-            width: options.width
-          }
+        composition: JSON.parse(options.props),
+        metadata: {
+          fps: options.fps,
+          height: options.height,
+          width: options.width
         },
         configuration: { codec: options.codec }
       });

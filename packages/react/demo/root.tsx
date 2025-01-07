@@ -2,19 +2,8 @@ import { RecodecProvider, Renderer } from "../src";
 
 function Root() {
   return (
-    <RecodecProvider>
-      <Renderer
-        Component={Composition}
-        composition={{
-          metadata: {
-            width: 1920,
-            height: 1080,
-            durationInFrames: 150,
-            fps: 30
-          },
-          props: {}
-        }}
-      />
+    <RecodecProvider metadata={{ width: 1920, height: 1080, fps: 30 }}>
+      <Renderer Component={Composition} composition={{}} />
     </RecodecProvider>
   );
 }
