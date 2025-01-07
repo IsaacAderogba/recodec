@@ -20,30 +20,34 @@ export const useCompositionItemSync = (item: Omit<CompositionItem, "id">) => {
   }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 
-export const useCompositionStateSync = (state: CompositionState) => {
+export const useCompositionStateSync = (
+  state: CompositionState,
+  props: { isRendering: boolean }
+) => {
   useEffect(() => {
-    console.log("state", state);
-    if (!window.compositionProps) return;
+    if (!props.isRendering) return;
     window.compositionState = state;
-  }, [state]);
+  }, [props.isRendering, state]);
 };
 
 export const useCompositionPropsSync = <T extends CompositionProps>(
   props: T
 ) => {
   const [compositionProps, setCompositionProps] = useState(props);
+  const { setState } = useRecodecStore();
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (!window.compositionProps) return;
       clearInterval(interval);
       setCompositionProps(window.compositionProps as T);
+      setState(state => ({ ...state, isRendering: true }));
     }, 1000);
 
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return compositionProps;
 };

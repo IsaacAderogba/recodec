@@ -1,20 +1,12 @@
-import {
-  CompositionMetadata,
-  CompositionProps,
-  CompositionState
-} from "@recodec/core";
+import { CompositionProps, CompositionState } from "@recodec/core";
 import path from "path";
 import puppeteer from "puppeteer";
 import { renderComposition, RenderCompositionProps } from "./ffmpeg";
 
-export interface RenderProps extends RenderCompositionProps {
+export interface RenderProps
+  extends Omit<RenderCompositionProps, "composition"> {
   entry: string;
   composition: CompositionProps;
-  metadata: CompositionMetadata;
-  configuration: {
-    codec: "h264" | "mp3";
-  };
-  output: { file: string };
 }
 
 export const render = async (props: RenderProps) => {
@@ -23,12 +15,11 @@ export const render = async (props: RenderProps) => {
   const browser = await puppeteer.launch({});
   const page = await browser.newPage();
 
-  await page.goto(`file://${path.resolve(__dirname, entry)}`);
-  await page.evaluate(value => (window.compositionProps = value), composition);
-  await page.setViewport({
-    width: metadata.width,
-    height: metadata.height
-  });
+  await page.goto(`file://${path.resolve(process.cwd(), entry)}`);
+  await page.evaluate(value => {
+    window.compositionProps = value || {};
+  }, composition);
+  await page.setViewport({ width: metadata.width, height: metadata.height });
 
   const state = await new Promise<CompositionState>(resolve => {
     let state: CompositionState | null = null;
@@ -49,9 +40,9 @@ export const render = async (props: RenderProps) => {
 };
 
 render({
-  entry: "../example-bundle/index.html",
+  entry: "./example-bundle/index.html",
   composition: {},
   configuration: { codec: "mp3" },
   metadata: { fps: 30, width: 1920, height: 1080 },
-  output: { file: "../example-bundle/output.mp3" }
+  output: { file: "./example-bundle/output.mp3" }
 });

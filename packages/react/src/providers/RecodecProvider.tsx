@@ -17,10 +17,13 @@ export const RecodecProvider: React.FC<
   PropsWithChildren<RecodecProviderProps>
 > = ({ children, metadata }) => {
   const [state, setState] = useState<RecodecState>({
+    isRendering: false,
     metadata,
     composition: { duration: 0, items: {} }
   });
-  useCompositionStateSync(state.composition);
+  useCompositionStateSync(state.composition, {
+    isRendering: state.isRendering
+  });
 
   const { fps, height, width } = metadata;
   useEffect(() => {
@@ -57,8 +60,8 @@ export const RecodecProvider: React.FC<
   }, []);
 
   const value = useMemo(
-    () => ({ state, setItem, removeItem }),
-    [state, setItem, removeItem]
+    () => ({ state, setState, setItem, removeItem }),
+    [state, setState, setItem, removeItem]
   );
 
   return (

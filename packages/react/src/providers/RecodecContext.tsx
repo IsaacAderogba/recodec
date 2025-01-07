@@ -6,12 +6,14 @@ import {
 import { createContext, useContext, useEffect } from "react";
 
 export interface RecodecState {
+  isRendering: boolean;
   composition: CompositionState;
   metadata: CompositionMetadata;
 }
 
 export interface RecodecStore {
   state: RecodecState;
+  setState: React.Dispatch<React.SetStateAction<RecodecState>>;
   setItem: (item: CompositionItem) => void;
   removeItem: (id: string) => void;
 }
