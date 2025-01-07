@@ -1,4 +1,5 @@
 import { RecodecProvider, Renderer } from "../src";
+import { Composition } from "./Composition";
 
 function Root() {
   return (
@@ -7,11 +8,5 @@ function Root() {
     </RecodecProvider>
   );
 }
-
-interface CompositionProps {}
-
-const Composition: React.FC<CompositionProps> = () => {
-  return null;
-};
 
 export default Root;

@@ -4,18 +4,18 @@ import { useMemo } from "react";
 
 export interface VideoSequenceProps extends VideoSequenceData {
   from: number;
-  durationInFrames: number;
+  duration: number;
 }
 
 export const VideoSequence: React.FC<VideoSequenceProps> = ({
   from,
-  durationInFrames,
+  duration,
   src
 }) => {
-  const video: Omit<VideoCompositionItem, "id"> = useMemo(() => {
-    return { type: "video", from, durationInFrames, data: { src } };
-  }, [from, durationInFrames, src]);
-  useCompositionItemSync(video);
+  const item: Omit<VideoCompositionItem, "id"> = useMemo(() => {
+    return { type: "video", from, duration, data: { src } };
+  }, [from, duration, src]);
+  useCompositionItemSync(item);
 
   return null;
 };

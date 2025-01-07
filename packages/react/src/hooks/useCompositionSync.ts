@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import {
   CompositionItem,
   CompositionProps,
@@ -7,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useRecodecStore } from "../providers/RecodecContext";
 
 export const useCompositionItemSync = (item: Omit<CompositionItem, "id">) => {
-  const [id] = useState("");
+  const [id] = useState(v4());
   const { setItem, removeItem } = useRecodecStore();
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export const useCompositionItemSync = (item: Omit<CompositionItem, "id">) => {
 
 export const useCompositionStateSync = (state: CompositionState) => {
   useEffect(() => {
+    console.log("state", state);
     if (!window.compositionProps) return;
     window.compositionState = state;
   }, [state]);

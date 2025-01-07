@@ -2,9 +2,6 @@ export { RecodecProvider } from "./providers/RecodecProvider";
 export type { RecodecProviderProps } from "./providers/RecodecProvider";
 export type { RecodecState, RecodecStore } from "./providers/RecodecContext";
 
-export { Sequence } from "./components/Sequence";
-export type { SequenceProps } from "./components/Sequence";
-
 export { AudioSequence } from "./components/AudioSequence";
 export type { AudioSequenceProps } from "./components/AudioSequence";
 

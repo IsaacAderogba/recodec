@@ -18,7 +18,7 @@ export const RecodecProvider: React.FC<
 > = ({ children, metadata }) => {
   const [state, setState] = useState<RecodecState>({
     metadata,
-    composition: { durationInFrames: 0, items: {} }
+    composition: { duration: 0, items: {} }
   });
   useCompositionStateSync(state.composition);
 
@@ -35,8 +35,7 @@ export const RecodecProvider: React.FC<
       };
 
       nextState.composition.items[item.id] = item;
-      nextState.composition.durationInFrames =
-        calculateDurationInFrames(nextState);
+      nextState.composition.duration = calculateDuration(nextState);
 
       return nextState;
     });
@@ -51,8 +50,7 @@ export const RecodecProvider: React.FC<
       };
 
       delete nextState.composition.items[id];
-      nextState.composition.durationInFrames =
-        calculateDurationInFrames(nextState);
+      nextState.composition.duration = calculateDuration(nextState);
 
       return nextState;
     });
@@ -68,17 +66,12 @@ export const RecodecProvider: React.FC<
   );
 };
 
-const calculateDurationInFrames = (state: RecodecState) => {
-  const {
-    metadata,
-    composition: { items }
-  } = state;
-
+const calculateDuration = (state: RecodecState) => {
   let maxDuration = 0;
-  for (const id in items) {
-    const { from, duration } = items[id];
+  for (const id in state.composition.items) {
+    const { from, duration } = state.composition.items[id];
     maxDuration = Math.max(maxDuration, from + duration);
   }
 
-  return Math.round(maxDuration * metadata.fps);
+  return maxDuration;
 };

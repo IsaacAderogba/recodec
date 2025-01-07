@@ -1,6 +1,6 @@
 {
   "extends": ["@commitlint/config-conventional"],
   "rules": {
-    "scope-enum": [2, "always", ["react", "cli", "renderer", "bundler"]]
+    "scope-enum": [2, "always", ["react", "core", "cli", "renderer", "bundler"]]
   }
 }
