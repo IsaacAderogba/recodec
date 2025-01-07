@@ -1,16 +1,14 @@
-import { Composition } from "@recodec/core";
+import { Composition, CompositionProps } from "@recodec/core";
 import { ComponentType } from "react";
-import { CompositionProvider } from "../providers/CompositionProvider";
 
-export interface PlayerProps {
-  Component: ComponentType;
-  composition: Composition;
+export interface PlayerProps<T extends CompositionProps> {
+  Component: ComponentType<T>;
+  composition: Composition<T>;
 }
 
-export const Player: React.FC<PlayerProps> = ({ Component, composition }) => {
-  return (
-    <CompositionProvider>
-      <Component {...composition.props} />
-    </CompositionProvider>
-  );
-};
+export function Player<T extends CompositionProps>({
+  Component,
+  composition
+}: PlayerProps<T>) {
+  return <Component {...composition.props} />;
+}

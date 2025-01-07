@@ -7,8 +7,10 @@ export type CompositionMetadata = {
 
 export type CompositionProps = Record<string, any>;
 
-export interface Composition {
-  props: CompositionProps;
+export interface Composition<
+  Props extends CompositionProps = CompositionProps
+> {
+  props: Props;
   metadata: CompositionMetadata;
 }
 

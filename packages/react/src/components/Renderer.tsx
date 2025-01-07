@@ -1,17 +1,14 @@
+import { Composition, CompositionProps } from "@recodec/core";
 import { ComponentType } from "react";
-import { CompositionProvider } from "../providers/CompositionProvider";
 
-export interface RendererProps {
-  Component: ComponentType<any>;
+export interface RendererProps<T extends CompositionProps> {
+  Component: ComponentType<T>;
+  composition: Composition<T>;
 }
 
-export const Renderer: React.FC<RendererProps> = ({ Component }) => {
-  /**
-   * todo: retrieve composition from window and sync back up
-   */
-  return (
-    <CompositionProvider>
-      {/* <Component {...composition.props} /> */}
-    </CompositionProvider>
-  );
-};
+export function Renderer<T extends CompositionProps>({
+  Component,
+  composition
+}: RendererProps<T>) {
+  return <Component {...composition.props} />;
+}

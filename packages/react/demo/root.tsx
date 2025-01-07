@@ -1,12 +1,25 @@
-import { Renderer } from "../src";
+import { RecodecProvider, Renderer } from "../src";
 
 function Root() {
-  return <Renderer Component={Composition} />;
+  return (
+    <RecodecProvider>
+      <Renderer
+        Component={Composition}
+        composition={{
+          metadata: {
+            width: 1920,
+            height: 1080,
+            durationInFrames: 150,
+            fps: 30
+          },
+          props: {}
+        }}
+      />
+    </RecodecProvider>
+  );
 }
 
-interface CompositionProps {
-  foo: string;
-}
+interface CompositionProps {}
 
 const Composition: React.FC<CompositionProps> = () => {
   return null;
