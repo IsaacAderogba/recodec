@@ -18,7 +18,7 @@ export interface VideoCompositionItem extends BaseCompositionItem {
   data: VideoSequenceData;
 }
 
-export interface VideoSequenceData extends BaseSequenceData {
+export interface VideoSequenceData {
   src: string;
 }
 
@@ -27,7 +27,7 @@ export interface AudioCompositionItem extends BaseCompositionItem {
   data: AudioSequenceData;
 }
 
-export interface AudioSequenceData extends BaseSequenceData {
+export interface AudioSequenceData {
   src: string;
 }
 
@@ -35,12 +35,8 @@ export interface BaseCompositionItem {
   id: string;
   type: CompositionType;
   from: number;
-  duration: number;
-  createdAt: string;
-  updatedAt: string;
+  durationInFrames: number;
 }
-
-export interface BaseSequenceData {}
 
 export type CompositionType = "video" | "audio";
 
