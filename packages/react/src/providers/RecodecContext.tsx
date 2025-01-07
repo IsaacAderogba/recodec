@@ -3,7 +3,7 @@ import {
   CompositionMetadata,
   CompositionState
 } from "@recodec/core";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 
 export interface RecodecState {
   composition: CompositionState;
@@ -20,7 +20,7 @@ export const RecodecContext = createContext<RecodecStore | undefined>(
   undefined
 );
 
-export const useRecodecState = () => {
+export const useRecodecStore = () => {
   const store = useContext(RecodecContext);
   if (!store) {
     throw new Error("recodec hooks must be used within a RecodecProvider");
