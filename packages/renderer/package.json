@@ -13,8 +13,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@recodec/core": "^1.0.0",
+    "fluent-ffmpeg": "^2.1.3",
     "puppeteer": "^23.11.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.27"
+  }
 }
