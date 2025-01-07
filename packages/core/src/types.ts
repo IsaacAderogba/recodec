@@ -11,16 +11,7 @@ export type CompositionState = {
   items: Record<string, CompositionItem>;
 };
 
-export type CompositionItem = VideoCompositionItem | AudioCompositionItem;
-
-export interface VideoCompositionItem extends BaseCompositionItem {
-  type: "video";
-  data: VideoSequenceData;
-}
-
-export interface VideoSequenceData {
-  src: string;
-}
+export type CompositionItem = AudioCompositionItem;
 
 export interface AudioCompositionItem extends BaseCompositionItem {
   type: "audio";
@@ -38,7 +29,7 @@ export interface BaseCompositionItem {
   duration: number;
 }
 
-export type CompositionType = "video" | "audio";
+export type CompositionType = "audio";
 
 declare global {
   interface Window {

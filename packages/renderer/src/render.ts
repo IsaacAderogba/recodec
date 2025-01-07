@@ -38,11 +38,3 @@ export const render = async (props: RenderProps) => {
   await browser.close();
   await renderComposition({ ...props, composition: state });
 };
-
-render({
-  entry: "./example-bundle/index.html",
-  composition: {},
-  configuration: { codec: "mp3" },
-  metadata: { fps: 30, width: 1920, height: 1080 },
-  output: { file: "./example-bundle/output.mp3" }
-});

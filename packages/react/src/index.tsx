@@ -5,9 +5,6 @@ export type { RecodecState, RecodecStore } from "./providers/RecodecContext";
 export { AudioSequence } from "./components/AudioSequence";
 export type { AudioSequenceProps } from "./components/AudioSequence";
 
-export { VideoSequence } from "./components/VideoSequence";
-export type { VideoSequenceProps } from "./components/VideoSequence";
-
 export { Player } from "./components/Player";
 export type { PlayerProps } from "./components/Player";
 

@@ -6,17 +6,20 @@ import {
   CompositionState
 } from "@recodec/core";
 import ffmpeg from "fluent-ffmpeg";
+import fs from "fs/promises";
 import os from "os";
 import path from "path";
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 ffmpeg.setFfprobePath(ffprobeInstaller.path);
+const tmpDir = path.join(os.tmpdir(), "recodec");
+fs.mkdir(tmpDir, { recursive: true });
 
 export interface RenderCompositionProps {
   composition: CompositionState;
   metadata: CompositionMetadata;
   configuration: {
-    codec: "h264" | "mp3";
+    codec: "mp3";
   };
   output: { file: string };
 }
@@ -25,36 +28,91 @@ export const renderComposition = async (props: RenderCompositionProps) => {
   const { composition, configuration, metadata, output } = props;
 
   switch (configuration.codec) {
-    case "h264":
-      console.log("render mp4");
-      break;
     case "mp3": {
-      const items: AudioCompositionItem[] = [];
+      const totalDuration = calculateDuration(composition);
+      const items: AudioCompositionItem[] = [
+        {
+          id: "silent-audio",
+          type: "audio",
+          from: 0,
+          duration: totalDuration,
+          data: { src: "anullsrc=channel_layout=stereo:sample_rate=44100" }
+        }
+      ];
+
       for (const id in composition.items) {
         const item = composition.items[id];
         if (item.type === "audio") items.push(item);
       }
 
-      console.log("items", items);
+      const promises = items.map((item, index) => {
+        const filename = `output${index}.mp3`;
+        const file = path.join(tmpDir, filename);
 
-      const command = ffmpeg();
-      for (const item of items) {
-        command
-          .input(item.data.src)
-          .setStartTime(item.from / metadata.fps)
-          .setDuration(item.duration / metadata.fps);
-      }
+        return new Promise<{ file: string; item: AudioCompositionItem }>(
+          (resolve, reject) => {
+            const command = ffmpeg();
+            if (item.id === "silent-audio") {
+              command
+                .input("anullsrc=channel_layout=5.1:sample_rate=48000")
+                .inputFormat("lavfi")
+                .inputOption(`-t ${item.duration / metadata.fps}`);
+            } else {
+              command
+                .input(item.data.src)
+                // .seekInput(item.from / metadata.fps) <- if has offsets
+                // .setStartTime(item.from / metadata.fps)
+                .setDuration(item.duration / metadata.fps);
+            }
+            command
+              .output(file)
+              .on("end", () => resolve({ file, item }))
+              .on("error", err => reject(err))
+              .run();
+          }
+        );
+      });
+
+      const files = await Promise.all(promises);
 
       return new Promise((resolve, reject) => {
         const name = path.basename(output.file);
-        const tmpFile = path.join(os.tmpdir(), `${Date.now()}-${name}`);
         const outputFile = path.join(process.cwd(), output.file);
 
+        const command = ffmpeg();
+        for (const { file } of files) {
+          command.input(file);
+        }
+
         command
-          .output(outputFile)
-          .on("progress", progress => {
-            console.log(`Processing ${name}`, progress);
-          })
+          .complexFilter(
+            [
+              ...files.map(({ item }, index) => {
+                const delayInSeconds = item.from / metadata.fps;
+                const delayInMilliseconds = delayInSeconds * 1000;
+
+                return {
+                  filter: "adelay",
+                  options: {
+                    delays: `${delayInMilliseconds}|${delayInMilliseconds}`
+                  },
+                  inputs: `${index}:a`,
+                  outputs: `delayed:${index}:a`
+                };
+              }),
+              {
+                filter: "amix",
+                options: {
+                  inputs: files.length,
+                  duration: "longest",
+                  dropout_transition: 3
+                },
+                inputs: files.map((_, index) => `delayed:${index}:a`),
+                outputs: "out"
+              }
+            ],
+            ["out"]
+          )
           .on("end", () => {
             console.log(`Finished processing ${name}`);
             resolve(outputFile);
@@ -63,9 +121,20 @@ export const renderComposition = async (props: RenderCompositionProps) => {
             console.error(`Error processing ${name}: ${err.message}`);
             reject(err);
           })
-          .mergeToFile(tmpFile, os.tmpdir())
-          .run();
+          .save(outputFile);
       });
     }
+    default:
+      throw new Error(`Unxpected codec: ${configuration.codec}`);
   }
+};
+
+const calculateDuration = (state: CompositionState) => {
+  let maxDuration = 0;
+  for (const id in state.items) {
+    const { from, duration } = state.items[id];
+    maxDuration = Math.max(maxDuration, from + duration);
+  }
+
+  return maxDuration;
 };
