@@ -3,7 +3,7 @@ import {
   CompositionMetadata,
   CompositionState
 } from "@recodec/core";
-import { createContext, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 
 export interface RecodecState {
   isRendering: boolean;
