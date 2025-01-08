@@ -29,7 +29,7 @@ export const renderComposition = async (props: RenderCompositionProps) => {
 
   switch (configuration.codec) {
     case "mp3": {
-      const totalDuration = calculateDuration(composition);
+      const totalDuration = composition.duration;
       const items: AudioCompositionItem[] = [
         {
           id: "silent-audio",
@@ -127,14 +127,4 @@ export const renderComposition = async (props: RenderCompositionProps) => {
     default:
       throw new Error(`Unxpected codec: ${configuration.codec}`);
   }
-};
-
-const calculateDuration = (state: CompositionState) => {
-  let maxDuration = 0;
-  for (const id in state.items) {
-    const { from, duration } = state.items[id];
-    maxDuration = Math.max(maxDuration, from + duration);
-  }
-
-  return maxDuration;
 };

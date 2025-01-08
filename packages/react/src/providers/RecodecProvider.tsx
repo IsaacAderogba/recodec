@@ -17,6 +17,8 @@ export const RecodecProvider: React.FC<
   PropsWithChildren<RecodecProviderProps>
 > = ({ children, metadata }) => {
   const [state, setState] = useState<RecodecState>({
+    status: "pause",
+    frame: 0,
     isRendering: false,
     metadata,
     composition: { duration: 0, items: {} }
@@ -59,13 +61,10 @@ export const RecodecProvider: React.FC<
     });
   }, []);
 
-  const value = useMemo(
-    () => ({ state, setState, setItem, removeItem }),
-    [state, setState, setItem, removeItem]
-  );
-
   return (
-    <RecodecContext.Provider value={value}>{children}</RecodecContext.Provider>
+    <RecodecContext.Provider value={{ state, setState, setItem, removeItem }}>
+      {children}
+    </RecodecContext.Provider>
   );
 };
 

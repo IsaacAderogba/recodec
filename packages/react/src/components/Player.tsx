@@ -1,22 +1,17 @@
 import { CompositionProps } from "@recodec/core";
 import React, {
   ComponentType,
-  Fragment,
   SyntheticEvent,
+  useEffect,
   useImperativeHandle,
-  useRef,
-  useState
+  useRef
 } from "react";
+import { useRecodecStore } from "../providers/RecodecContext";
 import { EventEmitter } from "../utilities/EventEmitter";
 
 export interface PlayerProps {
   Component: ComponentType<CompositionProps>;
   composition: CompositionProps;
-}
-
-export interface PlayerState {
-  state: "play" | "playing" | "paused";
-  frame: number;
 }
 
 export type PlayerAPI = {
@@ -30,17 +25,17 @@ export type PlayerRef = Pick<PlayerAPI, "play" | "pause"> &
 
 export const Player = React.forwardRef<PlayerRef, PlayerProps>(
   ({ Component, composition }, ref) => {
-    const [state, setState] = useState<PlayerState>({
-      state: "paused",
-      frame: 0
-    });
+    const { state, setState } = useRecodecStore();
 
     const emitter = useRef(new EventEmitter<PlayerAPI>());
     const handler = useRef<PlayerAPI>({
       play: event => {
+        console.log("play");
+        setState(state => ({ ...state, status: "play" }));
         emitter.current.emit("play", event);
       },
       pause: () => {
+        setState(state => ({ ...state, status: "pause" }));
         emitter.current.emit("pause");
       },
       frame: frame => {
@@ -58,10 +53,50 @@ export const Player = React.forwardRef<PlayerRef, PlayerProps>(
       []
     );
 
+    const intervalId = useRef<NodeJS.Timeout>();
+    useEffect(() => {
+      switch (state.status) {
+        case "play":
+          setState(state => {
+            return {
+              ...state,
+              status: "playing",
+              frame: state.frame >= state.composition.duration ? 0 : state.frame
+            };
+          });
+          return;
+        case "playing":
+          clearInterval(intervalId.current);
+          intervalId.current = setInterval(() => {
+            setState(state => {
+              if (state.status === "pause") return state;
+              if (state.frame >= state.composition.duration) {
+                return { ...state, status: "pause" };
+              } else {
+                return { ...state, frame: state.frame + 1 };
+              }
+            });
+          }, 1000 / state.metadata.fps);
+          return;
+        case "pause":
+          clearInterval(intervalId.current);
+          return;
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.status, state.metadata.fps]);
+
     return (
-      <Fragment>
-        <Component {...composition} />;
-      </Fragment>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+          <progress value={state.frame} max={state.composition.duration} />
+          {state.status === "playing" ? (
+            <button onClick={handler.current.pause}>pause</button>
+          ) : (
+            <button onClick={handler.current.play}>play</button>
+          )}
+        </div>
+        <Component {...composition} />
+      </div>
     );
   }
 );

@@ -6,6 +6,8 @@ import {
 import { createContext, useContext } from "react";
 
 export interface RecodecState {
+  status: "play" | "playing" | "pause";
+  frame: number;
   isRendering: boolean;
   composition: CompositionState;
   metadata: CompositionMetadata;
