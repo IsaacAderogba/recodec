@@ -16,5 +16,8 @@ export default defineConfig({
       formats: ["es"],
       fileName: "index"
     }
+  },
+  server: {
+    port: 5172
   }
 });

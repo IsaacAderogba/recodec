@@ -2,8 +2,8 @@ import { CompositionProps } from "@recodec/core";
 import React, {
   ComponentType,
   SyntheticEvent,
-  useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useRef
 } from "react";
 import { useRecodecStore } from "../providers/RecodecContext";
@@ -30,7 +30,6 @@ export const Player = React.forwardRef<PlayerRef, PlayerProps>(
     const emitter = useRef(new EventEmitter<PlayerAPI>());
     const handler = useRef<PlayerAPI>({
       play: event => {
-        console.log("play");
         setState(state => ({ ...state, status: "play" }));
         emitter.current.emit("play", event);
       },
@@ -54,7 +53,7 @@ export const Player = React.forwardRef<PlayerRef, PlayerProps>(
     );
 
     const intervalId = useRef<NodeJS.Timeout>();
-    useEffect(() => {
+    useLayoutEffect(() => {
       switch (state.status) {
         case "play":
           setState(state => {
@@ -96,6 +95,10 @@ export const Player = React.forwardRef<PlayerRef, PlayerProps>(
           )}
         </div>
         <Component {...composition} />
+        {/* <audio
+          controls
+          src="https://samplelib.com/lib/preview/mp3/sample-9s.mp3"
+        ></audio> */}
       </div>
     );
   }

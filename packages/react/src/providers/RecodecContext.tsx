@@ -5,8 +5,9 @@ import {
 } from "@recodec/core";
 import { createContext, useContext } from "react";
 
+export type RecodecStatus = "play" | "playing" | "pause";
 export interface RecodecState {
-  status: "play" | "playing" | "pause";
+  status: RecodecStatus;
   frame: number;
   isRendering: boolean;
   composition: CompositionState;
