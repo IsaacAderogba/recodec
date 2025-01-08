@@ -28,9 +28,9 @@ export const chainRenderCommand = (program: Command) => {
         output: { file: options.outputFile },
         composition: JSON.parse(options.props),
         metadata: {
-          fps: options.fps,
-          height: options.height,
-          width: options.width
+          fps: parseInt(options.fps),
+          height: parseInt(options.height),
+          width: parseInt(options.width)
         },
         configuration: { codec: options.codec }
       });

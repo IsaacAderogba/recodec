@@ -1,23 +1,16 @@
 import { Fragment } from "react/jsx-runtime";
 import { AudioSequence } from "../src";
 
-interface CompositionProps {}
+interface CompositionProps {
+  data: { from: number; duration: number; src: string }[];
+}
 
-export const Composition: React.FC<CompositionProps> = () => {
+export const Composition: React.FC<CompositionProps> = ({ data }) => {
   return (
     <Fragment>
-      {/* 0 - 2 seconds */}
-      <AudioSequence
-        from={0}
-        duration={60}
-        src="https://samplelib.com/lib/preview/mp3/sample-9s.mp3"
-      />
-      {/* 4 - 6 seconds */}
-      <AudioSequence
-        from={120}
-        duration={60}
-        src="https://samplelib.com/lib/preview/mp3/sample-12s.mp3"
-      />
+      {data.map((props, i) => {
+        return <AudioSequence key={i} {...props} />;
+      })}
     </Fragment>
   );
 };

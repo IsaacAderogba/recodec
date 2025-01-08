@@ -4,7 +4,7 @@ import { Composition } from "./Composition";
 function Root() {
   return (
     <RecodecProvider metadata={{ width: 1920, height: 1080, fps: 30 }}>
-      <Renderer Component={Composition} composition={{}} />
+      <Renderer Component={Composition} composition={{ data: [] }} />
     </RecodecProvider>
   );
 }

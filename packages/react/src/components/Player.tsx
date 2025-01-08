@@ -10,7 +10,7 @@ import { useRecodecStore } from "../providers/RecodecContext";
 import { EventEmitter } from "../utilities/EventEmitter";
 
 export interface PlayerProps {
-  Component: ComponentType<CompositionProps>;
+  Component: ComponentType<any>;
   composition: CompositionProps;
 }
 
